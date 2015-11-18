@@ -191,3 +191,9 @@ ModelManifest.xml
 
 # Cake tools
 tools/*
+
+# Nuget package (generated)
+*.nupkg
+
+# csproj backup file
+*.bak
