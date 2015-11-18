@@ -43,6 +43,9 @@ Supported Xamarin platforms:
         <file src="src\runner\nunit.runner.wp81\bin\Release\nunit.runner.wp81.dll" target="lib\wpa81\nunit.runner.wp81.dll" />
         <file src="src\runner\nunit.runner.wp81\bin\Release\nunit.runner.wp81.xml" target="lib\wpa81\nunit.runner.wp81.xml" />
         
+        <file src="nuget\uap10.0\MainPage.xaml.txt.pp" target="content\uap10.0\MainPage.xaml.txt.pp" />
+        <file src="nuget\uap10.0\MainPage.xaml.cs.txt.pp" target="content\uap10.0\MainPage.xaml.cs.txt.pp" />
+        <file src="src\runner\nunit.runner.uwp\bin\Release\nunit.runner.uwp\Properties\nunit.runner.uwp.rd.xml" target="lib\uap10.0\nunit.runner.uwp\Properties\nunit.runner.uwp.rd.xml" />
         <file src="src\runner\nunit.runner.uwp\bin\Release\nunit.runner.uwp.dll" target="lib\uap10.0\nunit.runner.uwp.dll" />
         <file src="src\runner\nunit.runner.uwp\bin\Release\nunit.runner.uwp.xml" target="lib\uap10.0\nunit.runner.uwp.xml" />
     </files>
