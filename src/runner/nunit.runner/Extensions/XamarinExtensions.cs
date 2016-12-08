@@ -12,6 +12,7 @@ namespace NUnit.Runner.Extensions
         /// <returns></returns>
         public static Color Color(this ITestResult result)
         {
+			if (result == null) return Xamarin.Forms.Color.White;
             switch (result.ResultState.Status)
             {
                 case TestStatus.Passed:

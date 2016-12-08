@@ -58,5 +58,20 @@ namespace NUnit.Runner.Tests
         {
             return await Task.FromResult(true);
         }
+
+		[Test]
+		public async Task TestFailingLongTest()
+		{
+			await Task.Delay(1500);
+			Assert.Fail("Need to fail");
+		}
+
+		[Test]
+		public async Task TestLongTest()
+		{
+			await Task.Delay(3000);
+		}
+
+
     }
 }
