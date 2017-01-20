@@ -47,8 +47,12 @@ namespace NUnit.Runner.ViewModel
         bool _running;
         TestResultProcessor _resultProcessor;
 
-        public SummaryViewModel()
+		readonly RunningViewModel _runningViewModel;
+
+		public SummaryViewModel()
         {
+			_runningViewModel = new RunningViewModel();
+
             _testAssemblies = new List<Assembly>();
             RunTestsCommand = new Command(async o => await ExecuteTestsAync(), o => !Running);
             ViewAllResultsCommand = new Command(
@@ -92,6 +96,12 @@ namespace NUnit.Runner.ViewModel
             }
         }
 
+		public RunningViewModel RunningData
+		{
+			get
+			{
+				return _runningViewModel;}}
+
         /// <summary>
         /// True if tests are currently running
         /// </summary>
@@ -128,11 +138,11 @@ namespace NUnit.Runner.ViewModel
         async Task ExecuteTestsAync()
         {
             Running = true;
-            Results = null;
+			Results = null;
 
             var runner = await LoadTestAssembliesAsync().ConfigureAwait(false);
 
-            ITestResult result = await Task.Run(() => runner.Run(TestListener.NULL, TestFilter.Empty)).ConfigureAwait(false);
+            ITestResult result = await Task.Run(() => runner.Run(_runningViewModel, TestFilter.Empty)).ConfigureAwait(false);
 
             _resultProcessor = TestResultProcessor.BuildChainOfResponsability(Options);
             await _resultProcessor.Process(result).ConfigureAwait(false);

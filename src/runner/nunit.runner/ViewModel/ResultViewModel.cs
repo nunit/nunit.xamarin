@@ -38,6 +38,14 @@ namespace NUnit.Runner.ViewModel
             Message = result.Message;
         }
 
+		public ResultViewModel(ITest test)
+		{
+			TestResult = null;
+			Result = string.Empty;
+			Name = test.Name;
+			Parent = test.Parent?.FullName;
+		}
+
         public ITestResult TestResult { get; private set; }
         public string Result { get; set; }
         public string Name { get; private set; }
