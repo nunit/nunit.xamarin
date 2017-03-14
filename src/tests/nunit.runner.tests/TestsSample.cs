@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace NUnit.Runner.Tests
 {
@@ -71,6 +72,18 @@ namespace NUnit.Runner.Tests
         public void Inconclusive()
         {
             Assert.Inconclusive("Inconclusive");
+        }
+
+        [Test]
+        public async Task AsyncTest()
+        {
+            var result = await anInt();
+            Assert.AreEqual(42, result);
+        }
+
+        private async Task<int> anInt()
+        {
+            return 42;
         }
 
         [Test]
