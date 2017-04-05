@@ -43,5 +43,17 @@ namespace NUnit.Runner.ViewModel
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected bool Set<T>(ref T field, T value, [CallerMemberName] string property = null)
+        {
+            if (field?.Equals(value) != true)
+            {
+                field = value;
+                OnPropertyChanged(property);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

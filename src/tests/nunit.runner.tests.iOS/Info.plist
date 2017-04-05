@@ -50,7 +50,9 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleShortVersionString</key>
 	<string></string>
-  <key>UIFileSharingEnabled</key>
-  <true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>CFBundleName</key>
+	<string>nunit.runner</string>
 </dict>
 </plist>

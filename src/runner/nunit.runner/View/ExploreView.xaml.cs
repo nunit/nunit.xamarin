@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,23 +26,24 @@ using Xamarin.Forms;
 
 namespace NUnit.Runner.View
 {
-    /// <summary>
-    /// Xamarin.Forms view of a list of test results
-    /// </summary>
-    public partial class ResultsView : ContentPage
-	{
-		internal ResultsView (ResultsViewModel model)
+    public partial class ExploreView : ContentPage
+    {
+        internal ExploreView(ExploreViewModel model)
         {
             model.Navigation = Navigation;
             BindingContext = model;
             InitializeComponent();
-		}
-
-        internal async void ViewTest(object sender, SelectedItemChangedEventArgs e)
-        {
-                var result = e.SelectedItem as ResultViewModel;
-                if (result != null)
-                    await Navigation.PushAsync(new TestView(new TestDetailsViewModel(result.TestResult)));
         }
-	}
+
+        internal void ViewTest(object sender, SelectedItemChangedEventArgs e)
+        {
+            var result = e.SelectedItem as TestViewModel;
+            if (result != null)
+            {
+                ((ExploreViewModel)BindingContext).SelectTest(result);
+            }
+
+            ((ListView)sender).SelectedItem = null;
+        }
+    }
 }

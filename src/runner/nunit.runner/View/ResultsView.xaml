@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NUnit.Runner.View.ResultsView"
@@ -18,15 +18,21 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" BackgroundColor="White" Spacing="4" Padding="0">
-                                    <BoxView Color="{Binding Color}" 
-                                           WidthRequest="10"
-                                           VerticalOptions="FillAndExpand"/>
-		                            <StackLayout Orientation="Vertical" Spacing="4" Padding="4" HorizontalOptions="StartAndExpand">
-		                                <Label Text="{Binding Name}" FontSize="Medium" />
-                                        <Label Text="{Binding Parent}" LineBreakMode="MiddleTruncation" TextColor="#4C4C4C" FontSize="Small" />
-		                            </StackLayout>
-                                </StackLayout>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <BoxView Color="{Binding Color}" Grid.RowSpan="2" />
+                                    <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" />
+                                    <Label Text="{Binding Parent}" TextColor="#4C4C4C" LineBreakMode="MiddleTruncation" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
+                                </Grid>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>
