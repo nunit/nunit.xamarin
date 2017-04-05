@@ -21,14 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NUnit.Runner.Helpers;
-using NUnit.Runner.View;
-
 using NUnit.Runner.Services;
-
+using NUnit.Runner.View;
 using Xamarin.Forms;
 
 namespace NUnit.Runner.ViewModel
@@ -36,20 +36,41 @@ namespace NUnit.Runner.ViewModel
     class SummaryViewModel : BaseViewModel
     {
         readonly TestPackage _testPackage;
-        ResultSummary _results;
+        ResultSummary _summary;
         bool _running;
         TestResultProcessor _resultProcessor;
 
         public SummaryViewModel()
         {
             _testPackage = new TestPackage();
-            RunTestsCommand = new Command(async o => await ExecuteTestsAync(), o => !Running);
-            ViewAllResultsCommand = new Command(
-                async o => await Navigation.PushAsync(new ResultsView(new ResultsViewModel(_results.GetTestResults(), true))),
-                o => !HasResults);
+            RunTestsCommand = new Command(_ => ExecuteTestsAync(), _ => !Running);
             ViewFailedResultsCommand = new Command(
-                async o => await Navigation.PushAsync(new ResultsView(new ResultsViewModel(_results.GetTestResults(), false))),
-                o => !HasResults);
+                _ => Navigation.PushAsync(new ResultsView(new ResultsViewModel(_summary.GetTestResults(), false))),
+                _ => !HasResults);
+
+            ExploreTestsCommand = new Command(
+                _ => 
+                {
+                    IEnumerable<TestViewModel> tests;
+                    if (_summary == null)
+                    {
+                        tests = _testPackage.LoadedTests.Select(t => new TestViewModel(t));
+                    }
+                    else
+                    {
+                        var results = _summary.GetTestResults().AsEnumerable();
+
+                        while (results?.Count() == 1)
+                        {
+                            results = results.Single().Children;
+                        }
+
+                        tests = results.Select(r => new TestViewModel(r));
+                    }
+
+                    Navigation.PushAsync(new ExploreView(new ExploreViewModel(tests, "Tests", _testPackage)));
+                },
+                _ => !Running);
         }
 
         private TestOptions options;
@@ -57,7 +78,8 @@ namespace NUnit.Runner.ViewModel
         /// <summary>
         /// User options for the test suite.
         /// </summary>
-        public TestOptions Options {
+        public TestOptions Options 
+        {
             get
             {
                 if(options == null)
@@ -71,13 +93,15 @@ namespace NUnit.Runner.ViewModel
                 options = value;
             }
         }
-        
+
+        public string ExploreText => $"Explore {_testPackage.TestsCount} tests >";
+
         /// <summary>
         /// Called from the view when the view is appearing
         /// </summary>
         public void OnAppearing()
         {
-            if(Options.AutoRun)
+            if (Options.AutoRun)
             {
                 // Don't rerun if we navigate back
                 Options.AutoRun = false;
@@ -90,13 +114,13 @@ namespace NUnit.Runner.ViewModel
         /// </summary>
         public ResultSummary Results
         {
-            get { return _results; }
+            get { return _summary; }
             set
             {
-                if (Equals(value, _results)) return;
-                _results = value;
-                OnPropertyChanged();
-                OnPropertyChanged("HasResults");
+                if (Set(ref _summary, value))
+                {
+                    OnPropertyChanged(nameof(HasResults));
+                }
             }
         }
 
@@ -108,9 +132,7 @@ namespace NUnit.Runner.ViewModel
             get { return _running; }
             set
             {
-                if (value.Equals(_running)) return;
-                _running = value;
-                OnPropertyChanged();
+                Set(ref _running, value);
             }
         }
 
@@ -120,8 +142,8 @@ namespace NUnit.Runner.ViewModel
         public bool HasResults => Results != null;
 
         public ICommand RunTestsCommand { set; get; }
-        public ICommand ViewAllResultsCommand { set; get; }
         public ICommand ViewFailedResultsCommand { set; get; }
+        public ICommand ExploreTestsCommand { set; get; }
 
         /// <summary>
         /// Adds an assembly to be tested.
@@ -131,6 +153,7 @@ namespace NUnit.Runner.ViewModel
         internal void AddTest(Assembly testAssembly)
         {
             _testPackage.AddAssembly(testAssembly);
+            OnPropertyChanged(nameof(ExploreText));
         }
 
         async Task ExecuteTestsAync()
