@@ -200,3 +200,4 @@ tools/*
 Resource.Designer.cs
 *.nuget.targets
 nunit.runner.userprefs
+*.nuget.props
