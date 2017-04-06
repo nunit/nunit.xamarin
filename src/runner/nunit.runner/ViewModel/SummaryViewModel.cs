@@ -48,29 +48,7 @@ namespace NUnit.Runner.ViewModel
                 _ => Navigation.PushAsync(new ResultsView(new ResultsViewModel(_summary.GetTestResults(), false))),
                 _ => !HasResults);
 
-            ExploreTestsCommand = new Command(
-                _ => 
-                {
-                    IEnumerable<TestViewModel> tests;
-                    if (_summary == null)
-                    {
-                        tests = _testPackage.LoadedTests.Select(t => new TestViewModel(t));
-                    }
-                    else
-                    {
-                        var results = _summary.GetTestResults().AsEnumerable();
-
-                        while (results?.Count() == 1)
-                        {
-                            results = results.Single().Children;
-                        }
-
-                        tests = results.Select(r => new TestViewModel(r));
-                    }
-
-                    Navigation.PushAsync(new ExploreView(new ExploreViewModel(tests, "Tests", _testPackage)));
-                },
-                _ => !Running);
+            ExploreTestsCommand = new Command(_ => ExploreTestsAsync(), _ => !Running);
         }
 
         private TestOptions options;
@@ -156,7 +134,29 @@ namespace NUnit.Runner.ViewModel
             OnPropertyChanged(nameof(ExploreText));
         }
 
-        async Task ExecuteTestsAync()
+        private async Task ExploreTestsAsync()
+        {
+            IEnumerable<TestViewModel> tests;
+            if (_summary == null)
+            {
+                tests = _testPackage.LoadedTests.Select(t => new TestViewModel(t));
+            }
+            else
+            {
+                var results = _summary.GetTestResults().AsEnumerable();
+
+                while (results.Count() == 1)
+                {
+                    results = results.Single().Children;
+                }
+
+                tests = results.Select(r => new TestViewModel(r));
+            }
+
+            await Navigation.PushAsync(new ExploreView(new ExploreViewModel(tests, "Tests", _testPackage)));
+        }
+
+        private async Task ExecuteTestsAync()
         {
             Running = true;
             Results = null;

@@ -77,7 +77,6 @@ namespace NUnit.Runner.ViewModel
                     return "Not Executed";
                 }
 
-                var a = Result.Message;
                 if (Result.ResultState.Status == Framework.Interfaces.TestStatus.Passed)
                 {
                     if (Result.HasChildren)

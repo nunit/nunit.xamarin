@@ -99,7 +99,7 @@ namespace NUnit.Runner.Helpers
 
             public override bool Match(ITest test)
             {
-                // We don't want to run ignored/explicit tests
+                // We don't want to run explicit tests
                 if (!_force && test.RunState == RunState.Explicit)
                 {
                     return false;
