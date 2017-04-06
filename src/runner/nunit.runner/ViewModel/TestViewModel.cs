@@ -71,10 +71,10 @@ namespace NUnit.Runner.ViewModel
                 {
                     if (Test.HasChildren)
                     {
-                        return $"{Test.TestCaseCount} test case(s), Runnable";
+                        return $"{Test.TestCaseCount} test case(s), {Test.RunState}";
                     }
 
-                    return "Not Executed";
+                    return $"Not Executed, {Test.RunState}";
                 }
 
                 if (Result.ResultState.Status == Framework.Interfaces.TestStatus.Passed)

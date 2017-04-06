@@ -96,8 +96,12 @@ namespace NUnit.Runner.ViewModel
 
         private async Task RunTest(TestViewModel vm)
         {
+            Running = true;
+
             var run = await _package.ExecuteTests(new[] { vm.Test }, force: !vm.Test.IsSuite);
             vm.Result = run.TestResults.Flatten().FirstOrDefault(t => t.Test.FullName == vm.Test.FullName);
+
+            Running = false;
         }
 
         private async Task NavigateToTestDetails(TestViewModel vm)

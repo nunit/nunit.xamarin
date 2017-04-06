@@ -87,7 +87,9 @@ namespace NUnit.Runner.Helpers
 
             public CustomTestFilter(IEnumerable<ITest> tests, bool force)
             {
-                var names = tests.Flatten().Select(t => t.FullName);
+                var names = tests.Flatten()
+                                 .Where(t => t.RunState == RunState.Runnable)
+                                 .Select(t => t.FullName);
                 _testNames = new HashSet<string>(names);
                 _force = force;
             }
@@ -100,9 +102,18 @@ namespace NUnit.Runner.Helpers
             public override bool Match(ITest test)
             {
                 // We don't want to run explicit tests
-                if (!_force && test.RunState == RunState.Explicit)
+                if (!_force)
                 {
-                    return false;
+                    var parent = test.Parent;
+                    while (parent != null)
+                    {
+                        if (parent.RunState != RunState.Runnable)
+                        {
+                            return false;
+                        }
+
+                        parent = parent.Parent;
+                    }
                 }
 
                 return _testNames.Contains(test.FullName);
