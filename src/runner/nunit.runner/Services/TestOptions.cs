@@ -65,6 +65,11 @@ namespace NUnit.Runner.Services
         public bool CreateXmlResultFile { get; set; }
 
         /// <summary>
+        /// If True, test results will be logged to the application output.
+        /// </summary>
+        public bool LogToOutput { get; set; }
+
+        /// <summary>
         /// File path for the xml result file
         /// Default is [LocalStorage]/TestResults.xml
         /// </summary>

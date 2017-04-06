@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.Runner.ViewModel;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 internal static class EnumerableExtensions

@@ -33,12 +33,12 @@ using Xamarin.Forms;
 
 namespace NUnit.Runner.ViewModel
 {
-    class SummaryViewModel : BaseViewModel
+    internal class SummaryViewModel : BaseViewModel
     {
-        readonly TestPackage _testPackage;
-        ResultSummary _summary;
-        bool _running;
-        TestResultProcessor _resultProcessor;
+        private readonly TestPackage _testPackage;
+        private ResultSummary _summary;
+        private bool _running;
+        private TestResultProcessor _resultProcessor;
 
         public SummaryViewModel()
         {
@@ -69,6 +69,7 @@ namespace NUnit.Runner.ViewModel
             set
             {
                 options = value;
+                _testPackage.Options = value;
             }
         }
 
@@ -92,7 +93,10 @@ namespace NUnit.Runner.ViewModel
         /// </summary>
         public ResultSummary Results
         {
-            get { return _summary; }
+            get 
+            { 
+                return _summary; 
+            }
             set
             {
                 if (Set(ref _summary, value))

@@ -50,29 +50,21 @@ namespace NUnit.Runner.Extensions
                         return Xamarin.Forms.Color.FromRgb(255, 106, 0);  // Orange
 
                     return Xamarin.Forms.Color.FromRgb(170, 0, 0); // Dark Red
-                    
-                case TestStatus.Inconclusive:
                 default:
                     return Xamarin.Forms.Color.Gray;
             }
         }
 
-        public static Color Color(this IEnumerable<ResultState> results)
+        public static ResultState OverallResultState(this ITestResult result)
         {
-            if (!results.Any())
+            if (result.ResultState.Status == TestStatus.Skipped &&
+                result.Test.IsSuite &&
+                result.Children.Flatten().Any(c => c.ResultState.Status == TestStatus.Passed))
             {
-                return Xamarin.Forms.Color.Transparent;
+                return new ResultState(TestStatus.Passed);
             }
 
-            foreach (var result in results)
-            {
-                if (result.Status == TestStatus.Failed)
-                {
-                    return result.Color();
-                }
-            }
-
-            return Xamarin.Forms.Color.Green;
+            return result.ResultState;
         }
     }
 }

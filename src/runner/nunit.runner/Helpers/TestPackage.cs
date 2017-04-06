@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Runner.Services;
 
 namespace NUnit.Runner.Helpers
 {
@@ -40,6 +41,8 @@ namespace NUnit.Runner.Helpers
         private readonly NUnitTestAssemblyRunner _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
         public int TestsCount => _runner.IsTestLoaded ? _runner.CountTestCases(TestFilter.Empty) : 0;
+
+        public TestOptions Options { get; set; }
 
         public IEnumerable<ITest> LoadedTests
         {
@@ -66,7 +69,8 @@ namespace NUnit.Runner.Helpers
             var resultPackage = new TestRunResult();
 
             var filter = new CustomTestFilter(tests, force);
-            var result = await Task.Run(() => _runner.Run(new CustomTestListener(), filter)).ConfigureAwait(false);
+            var listener = Options?.LogToOutput == true ? new CustomTestListener() : TestListener.NULL;
+            var result = await Task.Run(() => _runner.Run(listener, filter)).ConfigureAwait(false);
 
             LogTestRun(result);
 
@@ -129,23 +133,28 @@ namespace NUnit.Runner.Helpers
 
             public override bool Match(ITest test)
             {
-                // We don't want to run explicit tests
-                if (!_force)
+                // If filter was created with null tests collection, we assume we want to run all tests
+                if (_testNames?.Contains(test.FullName) ?? true)
                 {
-                    var parent = test;
-                    while (parent != null)
+                    // We don't want to run explicit tests
+                    if (!_force)
                     {
-                        if (parent.RunState != RunState.Runnable)
+                        var parent = test;
+                        while (parent != null)
                         {
-                            return false;
-                        }
+                            if (parent.RunState != RunState.Runnable)
+                            {
+                                return false;
+                            }
 
-                        parent = parent.Parent;
+                            parent = parent.Parent;
+                        }
                     }
+
+                    return true;
                 }
 
-                // If filter was created with null tests collection, we assume we want to run all tests
-                return _testNames?.Contains(test.FullName) ?? true;
+                return false;
             }
         }
     }

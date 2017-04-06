@@ -36,6 +36,7 @@ namespace NUnit.Runner.Helpers
 
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
+        public double Duration => (EndTime - StartTime).TotalSeconds;
 
         public TestRunResult()
         {

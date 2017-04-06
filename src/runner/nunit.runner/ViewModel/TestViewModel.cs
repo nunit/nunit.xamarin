@@ -59,7 +59,7 @@ namespace NUnit.Runner.ViewModel
                     return Color.Transparent;
                 }
 
-                return Result.ResultState.Color();
+                return Result.OverallResultState().Color();
             }
         }
 
@@ -77,11 +77,11 @@ namespace NUnit.Runner.ViewModel
                     return $"Not Executed, {Test.RunState}";
                 }
 
-                if (Result.ResultState.Status == Framework.Interfaces.TestStatus.Passed)
+                if (Result.OverallResultState().Status == Framework.Interfaces.TestStatus.Passed)
                 {
                     if (Result.HasChildren)
                     {
-                        return $"Success! {(int)(Result.Duration * 1000)} ms for {Result.Test.TestCaseCount} test(s)";
+                        return $"Success! {(int)(Result.Duration * 1000)} ms for {Result.PassCount} test(s); {Result.SkipCount} skipped";
                     }
 
                     return $"Success! {(int)(Result.Duration * 1000)} ms for {Result.AssertCount} assertion(s)";

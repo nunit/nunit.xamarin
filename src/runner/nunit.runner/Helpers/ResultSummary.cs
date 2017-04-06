@@ -36,14 +36,14 @@ namespace NUnit.Runner.Helpers
     /// </summary>
     internal class ResultSummary
     {
-        private readonly TestRunResult _results;
+        public TestRunResult TestResult { get; }
         private XDocument _xmlResults;
 
         #region Constructor
 
         public ResultSummary(TestRunResult results)
         {
-            _results = results;
+            TestResult = results;
             Initialize();
             Summarize(results.TestResults);
         }
@@ -57,7 +57,7 @@ namespace NUnit.Runner.Helpers
         /// <returns></returns>
         public IReadOnlyCollection<ITestResult> GetTestResults()
         {
-            return _results.TestResults;
+            return TestResult.TestResults;
         }
 
         /// <summary>
@@ -82,15 +82,11 @@ namespace NUnit.Runner.Helpers
 
             test.Add(new XAttribute("xamarin-runner-version", typeof(ResultSummary).GetTypeInfo().Assembly.GetName().Version.ToString()));
 
-            var startTime = _results.StartTime;
-            var endTime = _results.EndTime;
-            var duration = endTime.Subtract(startTime).TotalSeconds;
+            test.Add(new XAttribute("start-time", TestResult.StartTime.ToString("u")));
+            test.Add(new XAttribute("end-time", TestResult.EndTime.ToString("u")));
+            test.Add(new XAttribute("duration", TestResult.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
 
-            test.Add(new XAttribute("start-time", startTime.ToString("u")));
-            test.Add(new XAttribute("end-time", endTime.ToString("u")));
-            test.Add(new XAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo)));
-
-            foreach (var result in _results.TestResults)
+            foreach (var result in TestResult.TestResults)
                 test.Add(XElement.Parse(result.ToXml(true).OuterXml));
 
             _xmlResults = new XDocument(test);
@@ -220,31 +216,31 @@ namespace NUnit.Runner.Helpers
                 AssertCount += result.AssertCount;
                 switch (result.ResultState.Status)
                 {
-                case TestStatus.Passed:
-                    PassCount++;
-                    if (status == TestStatus.Inconclusive)
-                        status = TestStatus.Passed;
-                    break;
-                case TestStatus.Failed:
-                    status = TestStatus.Failed;
-                    if (result.ResultState == ResultState.Failure)
-                        FailureCount++;
-                    else if (result.ResultState == ResultState.NotRunnable)
-                        InvalidCount++;
-                    else
-                        ErrorCount++;
-                    break;
-                case TestStatus.Skipped:
-                    if (result.ResultState == ResultState.Ignored)
-                        IgnoreCount++;
-                    else if (result.ResultState == ResultState.Explicit)
-                        ExplicitCount++;
-                    else
-                        SkipCount++;
-                    break;
-                case TestStatus.Inconclusive:
-                    InconclusiveCount++;
-                    break;
+                    case TestStatus.Passed:
+                        PassCount++;
+                        if (status == TestStatus.Inconclusive)
+                            status = TestStatus.Passed;
+                        break;
+                    case TestStatus.Failed:
+                        status = TestStatus.Failed;
+                        if (result.ResultState == ResultState.Failure)
+                            FailureCount++;
+                        else if (result.ResultState == ResultState.NotRunnable)
+                            InvalidCount++;
+                        else
+                            ErrorCount++;
+                        break;
+                    case TestStatus.Skipped:
+                        if (result.ResultState == ResultState.Ignored)
+                            IgnoreCount++;
+                        else if (result.ResultState == ResultState.Explicit)
+                            ExplicitCount++;
+                        else
+                            SkipCount++;
+                        break;
+                    case TestStatus.Inconclusive:
+                        InconclusiveCount++;
+                        break;
                 }
 
                 switch (OverallResult)
