@@ -66,10 +66,42 @@ namespace NUnit.Runner.Helpers
             var resultPackage = new TestRunResult();
 
             var filter = new CustomTestFilter(tests, force);
-            var result = await Task.Run(() => _runner.Run(TestListener.NULL, filter)).ConfigureAwait(false);
+            var result = await Task.Run(() => _runner.Run(new CustomTestListener(), filter)).ConfigureAwait(false);
+
+            LogTestRun(result);
+
             resultPackage.AddResult(result);
             resultPackage.CompleteTestRun();
             return resultPackage;
+        }
+
+        private static void LogTestRun(ITestResult result)
+        {
+            var total = result.FailCount + result.PassCount + result.InconclusiveCount;
+            var message = $"Tests run: {total} Passed: {result.PassCount} Failed: {result.FailCount} Inconclusive: {result.InconclusiveCount}";
+            Console.WriteLine(message);
+        }
+
+        private class CustomTestListener : ITestListener
+        {
+            public void TestFinished(ITestResult result)
+            {
+                if (!result.Test.IsSuite)
+                {
+                    var className = result.Test.ClassName?.Split('.').LastOrDefault();
+                    var status = result.ResultState.Status.ToString().ToUpper();
+                    var message = $"\t[{status}] {className}.{result.Test.Name}";
+                    Console.WriteLine(message);
+                }
+            }
+
+            public void TestOutput(TestOutput output)
+            {
+            }
+
+            public void TestStarted(ITest test)
+            {
+            }
         }
 
         private class CustomTestFilter : TestFilter
@@ -100,7 +132,7 @@ namespace NUnit.Runner.Helpers
                 // We don't want to run explicit tests
                 if (!_force)
                 {
-                    var parent = test.Parent;
+                    var parent = test;
                     while (parent != null)
                     {
                         if (parent.RunState != RunState.Runnable)

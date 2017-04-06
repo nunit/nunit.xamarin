@@ -40,7 +40,7 @@
 								          IsDestructive="true"/>
                             </ViewCell.ContextActions>
                             <ViewCell.View>
-								<Grid>
+								<Grid Padding="0,5,5,5">
 									<Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
 										<RowDefinition Height="Auto" />
@@ -52,7 +52,7 @@
 									</Grid.ColumnDefinitions>
 									
                                     <BoxView Color="{Binding Color}" Grid.RowSpan="2" />
-                                    <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" />
+                                    <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" FontAttributes="Bold" />
                                     <Label Text="{Binding TestStatus}" TextColor="#4C4C4C" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
 								</Grid>
                             </ViewCell.View>
