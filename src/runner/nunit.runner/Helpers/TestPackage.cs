@@ -65,15 +65,7 @@ namespace NUnit.Runner.Helpers
         {
             var resultPackage = new TestRunResult();
 
-            ITestFilter filter;
-            if (tests == null)
-            {
-                filter = TestFilter.Empty;
-            }
-            else
-            {
-                filter = new CustomTestFilter(tests, force);
-            }
+            var filter = new CustomTestFilter(tests, force);
             var result = await Task.Run(() => _runner.Run(TestListener.NULL, filter)).ConfigureAwait(false);
             resultPackage.AddResult(result);
             resultPackage.CompleteTestRun();
@@ -87,10 +79,14 @@ namespace NUnit.Runner.Helpers
 
             public CustomTestFilter(IEnumerable<ITest> tests, bool force)
             {
-                var names = tests.Flatten()
-                                 .Where(t => t.RunState == RunState.Runnable)
-                                 .Select(t => t.FullName);
-                _testNames = new HashSet<string>(names);
+                if (tests != null)
+                {
+                    var names = tests.Flatten()
+                                     .Select(t => t.FullName);
+
+                    _testNames = new HashSet<string>(names);
+                }
+
                 _force = force;
             }
 
@@ -116,7 +112,8 @@ namespace NUnit.Runner.Helpers
                     }
                 }
 
-                return _testNames.Contains(test.FullName);
+                // If filter was created with null tests collection, we assume we want to run all tests
+                return _testNames?.Contains(test.FullName) ?? true;
             }
         }
     }
