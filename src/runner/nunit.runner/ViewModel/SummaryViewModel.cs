@@ -38,7 +38,6 @@ namespace NUnit.Runner.ViewModel
         private readonly TestPackage _testPackage;
         private ResultSummary _summary;
         private bool _running;
-        private TestResultProcessor _resultProcessor;
 
         public SummaryViewModel()
         {
@@ -51,8 +50,6 @@ namespace NUnit.Runner.ViewModel
             ExploreTestsCommand = new Command(_ => ExploreTestsAsync(), _ => !Running);
         }
 
-        private TestOptions options;
-
         /// <summary>
         /// User options for the test suite.
         /// </summary>
@@ -60,15 +57,15 @@ namespace NUnit.Runner.ViewModel
         {
             get
             {
-                if(options == null)
+                if (_testPackage.Options == null)
                 {
-                    options = new TestOptions();
+                    _testPackage.Options = new TestOptions();
                 }
-                return options;
+
+                return _testPackage.Options;
             }
             set
             {
-                options = value;
                 _testPackage.Options = value;
             }
         }
@@ -134,7 +131,7 @@ namespace NUnit.Runner.ViewModel
         /// <returns></returns>
         internal void AddTest(Assembly testAssembly)
         {
-            _testPackage.AddAssembly(testAssembly);
+            _testPackage.AddTestAssembly(testAssembly);
             OnPropertyChanged(nameof(ExploreText));
         }
 
@@ -164,24 +161,23 @@ namespace NUnit.Runner.ViewModel
         {
             Running = true;
             Results = null;
-            TestRunResult results = await _testPackage.ExecuteTests();
-            ResultSummary summary = new ResultSummary(results);
+            var results = await _testPackage.ExecuteTests();
+            var summary = await _testPackage.ProcessResults(results);
 
-            _resultProcessor = TestResultProcessor.BuildChainOfResponsability(Options);
-            await _resultProcessor.Process(summary).ConfigureAwait(false);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (Options.TerminateAfterExecution)
+                {
+                    TerminateWithSuccess();
+                    return;
+                }
 
-            Device.BeginInvokeOnMainThread(
-                () =>
-                    {
-                        Results = summary;
-                        Running = false;
-
-                    if (Options.TerminateAfterExecution)
-                        TerminateWithSuccess();
-                });
+                Results = summary;
+                Running = false;
+            });
         }
 
-        public static void TerminateWithSuccess()
+        private static void TerminateWithSuccess()
         {
 #if __IOS__
             var selector = new ObjCRuntime.Selector("terminateWithSuccess");

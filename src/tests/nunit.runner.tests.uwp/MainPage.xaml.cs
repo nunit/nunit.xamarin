@@ -20,9 +20,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.IO;
 using System.Reflection;
 
 using NUnit.Runner.Services;
+using Windows.ApplicationModel;
+using Windows.Data.Xml.Xsl;
+using Windows.Storage;
 
 namespace NUnit.Runner.Tests
 {
@@ -56,10 +60,12 @@ namespace NUnit.Runner.Tests
                 //TcpWriterParameters = new TcpWriterInfo("192.168.0.108", 13000),
 
                 // Creates a NUnit Xml result file on the host file system using PCLStorage library.
-                CreateXmlResultFile = false,
+                CreateXmlResultFile = true,
 
                 // Choose a different path for the xml result file
-                // ResultFilePath = System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.TemporaryFolder.Path, "Nunit", "Results.xml")
+                ResultFilePath = Path.Combine(ApplicationData.Current.TemporaryFolder.Path, "Nunit", "Results.xml"),
+
+                XmlTransformFile = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "nunit3-junit.xslt")
             };
             
             LoadApplication(nunit);

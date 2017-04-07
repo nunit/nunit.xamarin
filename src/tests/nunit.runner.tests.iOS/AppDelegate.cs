@@ -74,7 +74,9 @@ namespace NUnit.Runner.Tests
                 // Choose a different path for the xml result file (ios file share / library directory)
                 ResultFilePath = Path.Combine(NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomain.User)[0].Path, "Results.xml"),
 
-                LogToOutput = true
+                LogToOutput = true,
+
+                XmlTransformFile = "nunit3-junit.xslt"
             };
 
             LoadApplication(nunit);

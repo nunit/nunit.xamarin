@@ -26,6 +26,9 @@ using Xamarin.Forms;
 
 namespace NUnit.Runner.View
 {
+    /// <summary>
+    /// A Xamarin.Forms view containing a collection of test cases/suites
+    /// </summary>
     public partial class ExploreView : ContentPage
     {
         internal ExploreView(ExploreViewModel model)

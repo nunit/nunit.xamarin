@@ -60,7 +60,7 @@ namespace NUnit.Runner.Helpers
             }
         }
 
-        public void AddAssembly(Assembly testAssembly)
+        public void AddTestAssembly(Assembly testAssembly)
         {
             _runner.Load(testAssembly, new Dictionary<string, object>());
         }
@@ -78,6 +78,16 @@ namespace NUnit.Runner.Helpers
             resultPackage.AddResult(result);
             resultPackage.CompleteTestRun();
             return resultPackage;
+        }
+
+        public async Task<ResultSummary> ProcessResults(TestRunResult results)
+        {
+            var summary = new ResultSummary(results);
+
+            var _resultProcessor = TestResultProcessor.BuildChainOfResponsability(Options);
+            await _resultProcessor.Process(summary).ConfigureAwait(false);
+
+            return summary;
         }
 
         private static void LogTestRun(ITestResult result)
