@@ -5,39 +5,34 @@
              Title="Test Results"
              Padding="0"
              BackgroundColor="{DynamicResource defaultBackground}" >
-    <StackLayout Orientation="Vertical" Spacing="4" BackgroundColor="{DynamicResource defaultBackground}" >
-        <ScrollView Orientation="Vertical"
-                    VerticalOptions="FillAndExpand" 
-                    HorizontalOptions="FillAndExpand" >
-            <ListView ItemsSource="{Binding Results}" 
-                      ItemSelected="ViewTest"
-                      VerticalOptions="FillAndExpand" 
-                      HorizontalOptions="FillAndExpand"
-                      HasUnevenRows="true">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+    <ListView ItemsSource="{Binding Results}" 
+              ItemSelected="ViewTest"
+              VerticalOptions="FillAndExpand" 
+              HorizontalOptions="FillAndExpand"
+              HasUnevenRows="true"
+		      Style="{DynamicResource defaultBackground}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <ViewCell.View>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <BoxView Color="{Binding Color}" Grid.RowSpan="2" />
-                                    <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" />
-                                    <Label Text="{Binding Parent}" TextColor="#4C4C4C" LineBreakMode="MiddleTruncation" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
-                                </Grid>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </ScrollView>
-    </StackLayout>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <BoxView Color="{Binding Color}" Grid.RowSpan="2" />
+                            <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" />
+                            <Label Text="{Binding Parent}" TextColor="#4C4C4C" LineBreakMode="MiddleTruncation" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
+                        </Grid>
+                    </ViewCell.View>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 </ContentPage>

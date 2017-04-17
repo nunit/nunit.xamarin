@@ -166,6 +166,8 @@ namespace NUnit.Runner.ViewModel
 
             Device.BeginInvokeOnMainThread(() =>
             {
+                Options.OnCompletedCallback?.Invoke();
+
                 if (Options.TerminateAfterExecution)
                 {
                     TerminateWithSuccess();

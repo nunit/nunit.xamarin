@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using PCLStorage;
 
 namespace NUnit.Runner.Services
@@ -50,6 +51,11 @@ namespace NUnit.Runner.Services
         /// If True, the application will terminate automatically after running the tests.
         /// </summary>
         public bool TerminateAfterExecution { get; set; }
+
+        /// <summary>
+        /// Gets or sets the callback that will be called after running the tests.
+        /// </summary>
+        public Action OnCompletedCallback { get; set; }
 
         /// <summary>
         /// Information about the tcp listener host and port.

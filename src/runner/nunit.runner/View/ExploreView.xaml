@@ -5,7 +5,7 @@
              BackgroundColor="{DynamicResource defaultBackground}"
 	         Title="{Binding Title}">
     <ContentPage.Content>
-		<Grid>
+		<Grid Style="{DynamicResource defaultBackground}">
 			<Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
 				<RowDefinition Height="*" />
