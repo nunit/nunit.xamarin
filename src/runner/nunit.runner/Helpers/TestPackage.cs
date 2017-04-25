@@ -94,11 +94,7 @@ namespace NUnit.Runner.Helpers
         {
             var total = result.FailCount + result.PassCount + result.InconclusiveCount;
             var message = $"Tests run: {total} Passed: {result.PassCount} Failed: {result.FailCount} Inconclusive: {result.InconclusiveCount}";
-#if WINDOWS_UWP
-            Debug.WriteLine(message);
-#else
-            Console.WriteLine(message);
-#endif
+            Trace.WriteLine(message);
         }
 
         private class CustomTestListener : ITestListener
@@ -110,11 +106,7 @@ namespace NUnit.Runner.Helpers
                     var className = result.Test.ClassName?.Split('.').LastOrDefault();
                     var status = result.ResultState.Status.ToString().ToUpper();
                     var message = $"\t[{status}] {className}.{result.Test.Name}";
-#if WINDOWS_UWP
-                    Debug.WriteLine(message);
-#else
-                    Console.WriteLine(message);
-#endif
+                    Trace.WriteLine(message);
                 }
             }
 

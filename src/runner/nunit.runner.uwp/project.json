@@ -3,6 +3,7 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.1",
     "NUnit": "3.6.1",
     "PCLStorage": "1.0.2",
+    "System.Diagnostics.TraceSource": "4.3.0",
     "Xamarin.Forms": "2.3.4.224"
   },
   "frameworks": {
