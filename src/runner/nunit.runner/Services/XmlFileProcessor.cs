@@ -49,9 +49,9 @@ namespace NUnit.Runner.Services
             {
                 await WriteXmlResultFile(result).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Debug.WriteLine("Fatal error while trying to write xml result file!");
+                Trace.WriteLine("Fatal error while trying to write xml result file! " + ex.Message);
                 throw;
             }
 

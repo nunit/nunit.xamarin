@@ -198,3 +198,6 @@ tools/*
 
 # Android Xamarin
 Resource.Designer.cs
+*.nuget.targets
+nunit.runner.userprefs
+*.nuget.props

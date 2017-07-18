@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole
+// Copyright (c) 2017 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,28 +21,45 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Runner.ViewModel;
-using Xamarin.Forms;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Runner.View
+[EditorBrowsable(EditorBrowsableState.Never)]
+internal static class EnumerableExtensions
 {
-    /// <summary>
-    /// Xamarin.Forms view of a list of test results
-    /// </summary>
-    public partial class ResultsView : ContentPage
-	{
-		internal ResultsView (ResultsViewModel model)
+    internal static IEnumerable<ITest> Flatten(this IEnumerable<ITest> tests)
+    {
+        foreach (var test in tests)
         {
-            model.Navigation = Navigation;
-            BindingContext = model;
-            InitializeComponent();
-		}
-
-        internal async void ViewTest(object sender, SelectedItemChangedEventArgs e)
-        {
-                var result = e.SelectedItem as ResultViewModel;
-                if (result != null)
-                    await Navigation.PushAsync(new TestView(new TestDetailsViewModel(result.TestResult)));
+            if (test.Tests.Any())
+            {
+                foreach (var child in test.Tests.Flatten())
+                {
+                    yield return child;
+                }
+            }
+            else
+            {
+                yield return test;
+            }
         }
-	}
+    }
+
+    internal static IEnumerable<ITestResult> Flatten(this IEnumerable<ITestResult> results)
+    {
+        foreach (var result in results)
+        {
+            if (result.Children.Any())
+            {
+                foreach (var child in result.Children.Flatten())
+                {
+                    yield return child;
+                }
+            }
+
+            yield return result;
+        }
+    }
 }

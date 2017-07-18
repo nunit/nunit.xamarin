@@ -41,11 +41,13 @@ namespace NUnit.Runner.Services
 
         public static TestResultProcessor BuildChainOfResponsability(TestOptions options)
         {
-            var tcpWriter = new TcpWriterProcessor(options);
-            var xmlFileWriter = new XmlFileProcessor(options);
-
-            tcpWriter.Successor = xmlFileWriter;
-            return tcpWriter;
+            return new TcpWriterProcessor(options)
+            {
+                Successor = new XmlFileProcessor(options)
+                {
+                    Successor = new XmlFileTransformer(options)
+                }
+            };
         }
     }
 }

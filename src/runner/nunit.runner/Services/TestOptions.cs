@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using PCLStorage;
 
 namespace NUnit.Runner.Services
@@ -32,14 +33,12 @@ namespace NUnit.Runner.Services
     {
         const string OutputXmlReportName = "TestResults.xml";
 
-        private string _resultFilePath;
-
         /// <summary>
         /// Constructor
         /// </summary>
         public TestOptions()
         {
-            _resultFilePath = System.IO.Path.Combine(FileSystem.Current.LocalStorage.Path, OutputXmlReportName);
+            ResultFilePath = System.IO.Path.Combine(FileSystem.Current.LocalStorage.Path, OutputXmlReportName);
         }
 
         /// <summary>
@@ -54,6 +53,11 @@ namespace NUnit.Runner.Services
         public bool TerminateAfterExecution { get; set; }
 
         /// <summary>
+        /// Gets or sets the callback that will be called after running the tests.
+        /// </summary>
+        public Action OnCompletedCallback { get; set; }
+
+        /// <summary>
         /// Information about the tcp listener host and port.
         /// For now, send result as XML to the listening server.
         /// </summary>
@@ -65,13 +69,19 @@ namespace NUnit.Runner.Services
         public bool CreateXmlResultFile { get; set; }
 
         /// <summary>
+        /// If True, test results will be logged to the application output.
+        /// </summary>
+        public bool LogToOutput { get; set; }
+
+        /// <summary>
         /// File path for the xml result file
         /// Default is [LocalStorage]/TestResults.xml
         /// </summary>
-        public string ResultFilePath
-        {
-            get { return _resultFilePath; }
-            set { _resultFilePath = value; }
-        }
+        public string ResultFilePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the xslt transform file for the results.
+        /// </summary>
+        public string XmlTransformFile { get; set; }
     }
 }

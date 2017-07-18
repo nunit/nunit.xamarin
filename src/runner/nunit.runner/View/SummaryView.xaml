@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NUnit.Runner.View.SummaryView"
              Title="NUnit 3"
-             Padding="10"
              BackgroundColor="{DynamicResource defaultBackground}" >
     <ContentPage.Triggers>
         <DataTrigger TargetType="ContentPage" Binding="{Binding Running}" Value="True">
@@ -115,9 +114,9 @@
 
         </ScrollView>
 
-        <Button Text="All Results" Command="{Binding ViewAllResultsCommand}" HorizontalOptions="FillAndExpand" VerticalOptions="End" >
+        <Button Text="{Binding ExploreText}" Command="{Binding ExploreTestsCommand}" HorizontalOptions="FillAndExpand">
             <Button.Triggers>
-                <DataTrigger TargetType="Button" Binding="{Binding HasResults}" Value="False">
+                <DataTrigger TargetType="Button" Binding="{Binding Running}" Value="True">
                     <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
             </Button.Triggers>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+	         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+	         x:Class="NUnit.Runner.View.ExploreView"
+             BackgroundColor="{DynamicResource defaultBackground}"
+	         Title="{Binding Title}">
+    <ContentPage.Content>
+		<Grid Style="{DynamicResource defaultBackground}">
+			<Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+            <Button Text="{Binding RunText}" Command="{Binding RunTestsCommand}"  HorizontalOptions="FillAndExpand">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Running}" Value="True">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+			
+			
+            <ListView x:Name="TestsListView"
+				      ItemsSource="{Binding Tests}" 
+                      VerticalOptions="FillAndExpand" 
+                      HorizontalOptions="FillAndExpand"
+                      HasUnevenRows="true"
+                      ItemSelected="ViewTest"
+				      Grid.Row="1">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Info"
+                                          Command="{Binding Path=BindingContext.TestDetailsCommand, Source={x:Reference Name=TestsListView}}"
+                                          CommandParameter="{Binding .}" />
+                                <MenuItem Text="Run"
+                                          Command="{Binding Path=BindingContext.RunTestCommand, Source={x:Reference Name=TestsListView}}"
+                                          CommandParameter="{Binding .}"
+								          IsDestructive="true"/>
+                            </ViewCell.ContextActions>
+                            <ViewCell.View>
+								<Grid Padding="0,5,5,5">
+									<Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+
+									<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10" />
+										<ColumnDefinition Width="*" />
+									</Grid.ColumnDefinitions>
+									
+                                    <BoxView Color="{Binding Color}" Grid.RowSpan="2" />
+                                    <Label Text="{Binding Name}" FontSize="Medium" Grid.Column="1" FontAttributes="Bold" />
+                                    <Label Text="{Binding TestStatus}" TextColor="#4C4C4C" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
+								</Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+		</Grid>
+    </ContentPage.Content>
+</ContentPage>
