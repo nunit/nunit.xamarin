@@ -195,6 +195,7 @@ tools/*
 
 # NuGet restore
 *project.lock.json
+*nuget.targets
 
 # Android Xamarin
 Resource.Designer.cs
