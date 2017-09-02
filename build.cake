@@ -12,7 +12,7 @@ var configuration = Argument("configuration", "Release");
 var isLocal = BuildSystem.IsLocalBuild;
 var isRunningOnAppVeyor = AppVeyor.IsRunningOnAppVeyor;
 
-var version = "3.7.0";
+var version = "3.8.1";
 var packageModifier = configuration == "Debug" ? "-dbg" : "";
 
 // Directories
@@ -83,7 +83,8 @@ Task("Restore-NuGet-Packages")
     NuGetRestore("./nunit.runner.sln", new NuGetRestoreSettings {
         Source = new List<string> {
             "https://www.nuget.org/api/v2/",
-            "https://www.myget.org/F/nunit/api/v2"
+            "https://www.myget.org/F/nunit/api/v2",
+            "https://api.nuget.org/v3/index.json"
         },
         Verbosity = NuGetVerbosity.Quiet 
     });
@@ -98,6 +99,7 @@ Task("Build")
         .SetPlatformTarget(PlatformTarget.MSIL)
         .WithProperty("TreatWarningsAsErrors", "true")
         .SetVerbosity(Verbosity.Minimal)
+        .UseToolVersion(MSBuildToolVersion.VS2017)
         .SetNodeReuse(false)
     );
 
@@ -107,6 +109,7 @@ Task("Build")
         .WithProperty("TreatWarningsAsErrors", "true")
         .WithProperty("AppxPackageSigningEnabled", "false")
         .SetVerbosity(Verbosity.Minimal)
+        .UseToolVersion(MSBuildToolVersion.VS2017)
         .SetNodeReuse(false)
     );
 });
