@@ -53,7 +53,7 @@ namespace $rootnamespace$
             nunit.Options = new TestOptions
             {
                 // If True, the tests will run automatically when the app starts
-                // otherwise you must run them manually.
+                // otherwise you must run them manually.git 
                 // AutoRun = true,
 
                 // If True, the application will terminate automatically after running the tests.
