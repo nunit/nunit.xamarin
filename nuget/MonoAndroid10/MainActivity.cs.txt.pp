@@ -47,10 +47,10 @@ namespace $rootnamespace$
             {
                 // If True, the tests will run automatically when the app starts
                 // otherwise you must run them manually.
-                AutoRun = true,
+                // AutoRun = true,
 
                 // If True, the application will terminate automatically after running the tests.
-                //TerminateAfterExecution = true,
+                // TerminateAfterExecution = true,
 
                 // Information about the tcp listener host and port.
                 // For now, send result as XML to the listening server.
