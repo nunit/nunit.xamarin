@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "NUnit": "3.9.0",
+    "NUnit": "[3.9.0]",
     "PCLStorage": "1.0.2",
     "Xamarin.Forms": "2.5.0.122203"
   },

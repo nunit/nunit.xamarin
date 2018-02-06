@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "NUnit": "3.9.0",
+    "NUnit": "[3.9.0]",
     "Xamarin.Forms": "2.5.0.122203"
   },
   "frameworks": {

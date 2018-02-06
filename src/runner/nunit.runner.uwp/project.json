@@ -1,12 +1,12 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "NUnit": "3.9.0",
+    "NUnit": "[3.9.0]",
     "PCLStorage": "1.0.2",
     "Xamarin.Forms": "2.5.0.122203"
   },
   "frameworks": {
-    "uap10.0.10240": {}
+    "uap10.0": {}
   },
   "runtimes": {
     "win10-arm": {},
