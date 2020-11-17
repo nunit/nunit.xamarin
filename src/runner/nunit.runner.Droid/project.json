@@ -1,11 +1,11 @@
 ﻿{
   "dependencies": {
-    "NUnit": "3.6.1",
+    "NUnit": "3.11.0",
     "PCLStorage": "1.0.2",
-    "Xamarin.Forms": "2.3.4.224"
+    "Xamarin.Forms": "3.6.0.293080"
   },
   "frameworks": {
-    "monoandroid71": {}
+    "monoandroid81": {}
   },
   "runtimes": {
     "win": {}

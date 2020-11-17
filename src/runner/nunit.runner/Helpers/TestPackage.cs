@@ -99,6 +99,10 @@ namespace NUnit.Runner.Helpers
 
         private class CustomTestListener : ITestListener
         {
+            public void SendMessage(TestMessage message)
+            {
+            }
+
             public void TestFinished(ITestResult result)
             {
                 if (!result.Test.IsSuite)

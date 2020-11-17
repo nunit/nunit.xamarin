@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -159,24 +161,35 @@ namespace NUnit.Runner.ViewModel
 
         private async Task ExecuteTestsAync()
         {
-            Running = true;
-            Results = null;
-            var results = await _testPackage.ExecuteTests();
-            var summary = await _testPackage.ProcessResults(results);
-
-            Device.BeginInvokeOnMainThread(() =>
+            try
             {
-                Options.OnCompletedCallback?.Invoke();
-
-                if (Options.TerminateAfterExecution)
+                Running = true;
+                Results = null;
+                var results = await _testPackage.ExecuteTests();
+                var summary = await _testPackage.ProcessResults(results);
+                Device.BeginInvokeOnMainThread(() =>
                 {
-                    TerminateWithSuccess();
-                    return;
-                }
+                    Options.OnCompletedCallback?.Invoke();
 
-                Results = summary;
+                    if (Options.TerminateAfterExecution)
+                    {
+                        TerminateWithSuccess();
+                        return;
+                    }
+
+                    Results = summary;
+                    Running = false;
+                });
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+            finally
+            {
                 Running = false;
-            });
+            }
+
         }
 
         private static void TerminateWithSuccess()

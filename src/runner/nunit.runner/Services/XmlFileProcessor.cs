@@ -107,9 +107,10 @@ namespace NUnit.Runner.Services
                         await folder.CreateFolderAsync(segments[i + 1], CreationCollisionOption.OpenIfExists);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                  // ignore
+                    Console.WriteLine(ex);
+                    // ignore
                 }
 
                 path = Path.Combine(path, segments[i + 1]);

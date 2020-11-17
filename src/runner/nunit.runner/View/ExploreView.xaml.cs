@@ -40,8 +40,7 @@ namespace NUnit.Runner.View
 
         internal void ViewTest(object sender, SelectedItemChangedEventArgs e)
         {
-            var result = e.SelectedItem as TestViewModel;
-            if (result != null)
+            if (e.SelectedItem is TestViewModel result)
             {
                 ((ExploreViewModel)BindingContext).SelectTest(result);
             }
