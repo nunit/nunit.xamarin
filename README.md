@@ -1,6 +1,6 @@
 # NUnit 3 Xamarin Runners
 
-[![Build status](https://ci.appveyor.com/api/projects/status/4972j2pn4mqs7j8n/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit-xamarin/branch/master)[![NuGet Version and Downloads count](https://buildstats.info/nuget/nunit.xamarin?includePreReleases=true)](https://www.nuget.org/packages/nunit.xamarin)
+This is a heavily modified version of https://github.com/nunit/nunit.xamarin, primarily used in Realm.
 
 [![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit)
 
