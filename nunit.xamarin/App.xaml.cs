@@ -21,6 +21,7 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
 using System.Reflection;
 
 using NUnit.Runner.Services;
@@ -38,13 +39,14 @@ namespace NUnit.Runner
         private readonly SummaryViewModel _model;
 
         /// <summary>
-        /// Constructs a new app adding the current assembly to be tested
+        /// Constructs a new app adding the current assembly to be tested.
+        /// <param name="output">Stream where the output is redirected. Default value is Console.Out.</param>
         /// </summary>
-        public App()
+        public App(TextWriter output = null)
         {
             InitializeComponent();
 
-            RealConsole.Init(Console.Out);
+            RealConsole.Init(output ?? Console.Out);
 
             // OnPlatform only reports WinPhone for WinPhone Silverlight, so swap
             // out the background color in code instead
