@@ -16,7 +16,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal"  VerticalOptions="Center">
+                        <StackLayout Orientation="Horizontal"  VerticalOptions="Center" Padding="5">
                             <Label VerticalOptions="Center" FontSize="Small" Text="{Binding FullName}" VerticalTextAlignment="Center" />
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Source={x:Reference testExplorerPage}, Path=BindingContext.RunTestCommand}"  NumberOfTapsRequired="2" CommandParameter="{Binding .}"/>
@@ -28,8 +28,8 @@
             <ListView.GroupHeaderTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <Grid >
-                            <Label BackgroundColor="#005B0C" FontAttributes="Bold" Text="{Binding GroupName}" FontSize="Small" TextColor="White" VerticalTextAlignment="Center" />
+                        <Grid BackgroundColor="#005B0C" >
+                            <Label Margin="5" FontAttributes="Bold" Text="{Binding GroupName}" FontSize="Small" TextColor="White" VerticalTextAlignment="Center" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
