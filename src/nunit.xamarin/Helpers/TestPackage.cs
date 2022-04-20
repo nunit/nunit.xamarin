@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Framework.Api;
@@ -54,6 +55,31 @@ namespace NUnit.Runner.Helpers
             }
             resultPackage.CompleteTestRun();
             return resultPackage;
+        }
+
+        public async Task<IEnumerable<(ITest Test, string Assembly)>> EnumerateTestsAsync()
+        {
+            var resultTests = new List<(ITest Test, string Assembly)>();
+            foreach (var (assembly, options) in _testAssemblies)
+            {                
+                var runner = await LoadTestAssemblyAsync(assembly, options).ConfigureAwait(false);
+                var assemblyTests = await Task.Run(() => runner.ExploreTests(TestFilter.Empty));
+                resultTests.AddRange(EnumerateTestsInternal(assemblyTests).Select(t => (t, assembly.GetName().Name)));
+            }
+            return resultTests;
+        }
+
+        private IEnumerable<ITest> EnumerateTestsInternal(ITest parent)
+        {
+            var resultTests = new List<ITest>();
+
+            foreach (var test in parent.Tests)
+            {
+                if (test.HasChildren) resultTests.AddRange(EnumerateTestsInternal(test));                
+                else resultTests.Add(test);                
+            }
+
+            return resultTests;
         }
 
         private static async Task<NUnitTestAssemblyRunner> LoadTestAssemblyAsync(Assembly assembly, Dictionary<string, object> options)

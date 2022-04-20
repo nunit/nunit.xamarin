@@ -11,13 +11,22 @@
         </DataTrigger>
     </ContentPage.Triggers>
     <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="{DynamicResource defaultBackground}">
-        <Button Text="Run Tests" Command="{Binding RunTestsCommand}"  HorizontalOptions="FillAndExpand">
-            <Button.Triggers>
-                <DataTrigger TargetType="Button" Binding="{Binding Running}" Value="True">
-                    <Setter Property="IsEnabled" Value="False" />
-                </DataTrigger>
-            </Button.Triggers>
-        </Button>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+            <Button Text="Run Tests" Command="{Binding RunTestsCommand}"  HorizontalOptions="StartAndExpand">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Running}" Value="True">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Text="Explore" Command="{Binding ExploreTestsCommand}"  HorizontalOptions="EndAndExpand">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Running}" Value="True">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </StackLayout>
 
         <ScrollView Orientation="Vertical"
                     VerticalOptions="FillAndExpand" 

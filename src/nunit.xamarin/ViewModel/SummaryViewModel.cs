@@ -31,6 +31,7 @@ using NUnit.Runner.View;
 using NUnit.Runner.Services;
 
 using Xamarin.Forms;
+using System.Linq;
 
 namespace NUnit.Runner.ViewModel
 {
@@ -45,6 +46,7 @@ namespace NUnit.Runner.ViewModel
         {
             _testPackage = new TestPackage();
             RunTestsCommand = new Command(async o => await ExecuteTestsAync(), o => !Running);
+            ExploreTestsCommand = new Command(async o => await Navigation.PushAsync(new TestExplorerView(new TestExplorerViewModel(_testPackage))), o => !Running);
             ViewAllResultsCommand = new Command(
                 async o => await Navigation.PushAsync(new ResultsView(new ResultsViewModel(_results.GetTestResults(), true))),
                 o => !HasResults);
@@ -123,6 +125,7 @@ namespace NUnit.Runner.ViewModel
         public ICommand RunTestsCommand { set; get; }
         public ICommand ViewAllResultsCommand { set; get; }
         public ICommand ViewFailedResultsCommand { set; get; }
+        public ICommand ExploreTestsCommand { get; set; }
 
         /// <summary>
         /// Adds an assembly to be tested.
@@ -138,6 +141,7 @@ namespace NUnit.Runner.ViewModel
         {
             Running = true;
             Results = null;
+
             TestRunResult results = await _testPackage.ExecuteTests();
             ResultSummary summary = new ResultSummary(results);
 
