@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace NUnit.Runner.Extensions
@@ -52,6 +55,16 @@ namespace NUnit.Runner.Extensions
                 case TestStatus.Inconclusive:
                 default:
                     return Xamarin.Forms.Color.Gray;
+            }
+        }
+
+        public static IEnumerable<string> PropertyValues(this ITest test, string propertyName)
+        {
+            if (!test.Properties.ContainsKey(propertyName)) yield break;
+            else
+            {
+                for (int i = 0; i < test.Properties[propertyName].Count; i++)
+                    yield return test.Properties[propertyName][i]?.ToString();
             }
         }
     }
