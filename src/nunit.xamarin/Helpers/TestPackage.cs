@@ -43,14 +43,20 @@ namespace NUnit.Runner.Helpers
             _testAssemblies.Add( (testAssembly, options) );
         }
 
-        public async Task<TestRunResult> ExecuteTests()
+        public async Task<TestRunResult> ExecuteTests() => await ExecuteTests(Enumerable.Empty<string>());
+
+        public async Task<TestRunResult> ExecuteTests(IEnumerable<string> testNames)
         {
+            var testFilter = testNames?.Any() == true ?
+                (TestFilter.FromXml($"<filter><or>{string.Join("", testNames.Select(n => $"<test>{n}</test>"))}</or></filter>")) :
+                TestFilter.Empty;
+
             var resultPackage = new TestRunResult();
 
-            foreach (var (assembly,options) in _testAssemblies)
+            foreach (var (assembly, options) in _testAssemblies)
             {
                 NUnitTestAssemblyRunner runner = await LoadTestAssemblyAsync(assembly, options).ConfigureAwait(false);
-                ITestResult result = await Task.Run(() => runner.Run(TestListener.NULL, TestFilter.Empty)).ConfigureAwait(false);
+                ITestResult result = await Task.Run(() => runner.Run(TestListener.NULL, testFilter)).ConfigureAwait(false);
                 resultPackage.AddResult(result);
             }
             resultPackage.CompleteTestRun();

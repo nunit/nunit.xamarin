@@ -4,9 +4,10 @@
              Title="Test Explorer"
              Padding="10"
              BackgroundColor="{DynamicResource defaultBackground}" 
+             x:Name="testExplorerPage"
              x:Class="NUnit.Runner.View.TestExplorerView">
     <ContentPage.Triggers>
-        <DataTrigger TargetType="ContentPage" Binding="{Binding Loading}" Value="True">
+        <DataTrigger TargetType="ContentPage" Binding="{Binding Busy}" Value="True">
             <Setter Property="IsBusy" Value="True" />
         </DataTrigger>
     </ContentPage.Triggers>
@@ -17,6 +18,9 @@
                     <ViewCell>
                         <StackLayout Orientation="Horizontal"  VerticalOptions="Center">
                             <Label VerticalOptions="Center" FontSize="Small" Text="{Binding FullName}" VerticalTextAlignment="Center" />
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference testExplorerPage}, Path=BindingContext.RunTestCommand}"  NumberOfTapsRequired="2" CommandParameter="{Binding .}"/>
+                            </StackLayout.GestureRecognizers>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

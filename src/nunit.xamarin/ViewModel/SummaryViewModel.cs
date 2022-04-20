@@ -46,7 +46,9 @@ namespace NUnit.Runner.ViewModel
         {
             _testPackage = new TestPackage();
             RunTestsCommand = new Command(async o => await ExecuteTestsAync(), o => !Running);
-            ExploreTestsCommand = new Command(async o => await Navigation.PushAsync(new TestExplorerView(new TestExplorerViewModel(_testPackage))), o => !Running);
+            
+            ExploreTestsCommand = new Command(async o => await Navigation.PushAsync(new TestExplorerView(new TestExplorerViewModel(_testPackage, this) { Navigation = Navigation})), o => !Running);
+
             ViewAllResultsCommand = new Command(
                 async o => await Navigation.PushAsync(new ResultsView(new ResultsViewModel(_results.GetTestResults(), true))),
                 o => !HasResults);
@@ -156,6 +158,21 @@ namespace NUnit.Runner.ViewModel
 
                     if (Options.TerminateAfterExecution)
                         TerminateWithSuccess();
+                });
+        }
+
+        internal async Task DisplayResults(TestRunResult results)
+        {
+            ResultSummary summary = new ResultSummary(results);
+
+            _resultProcessor = TestResultProcessor.BuildChainOfResponsability(Options);
+            await _resultProcessor.Process(summary).ConfigureAwait(false);
+
+            Device.BeginInvokeOnMainThread(
+                () =>
+                {
+                    Results = summary;
+                    Running = false;
                 });
         }
 

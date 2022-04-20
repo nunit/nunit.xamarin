@@ -36,6 +36,7 @@ namespace NUnit.Runner.ViewModel
         public TestDescriptionViewModel(ITest test, string assembly)
         {
             _test = test;
+            Name = StringOrUnknown(_test.Name);
             MethodName = StringOrUnknown(_test.MethodName);
             ClassName = StringOrUnknown(_test.ClassName);
             FullName = StringOrUnknown(_test.FullName);
@@ -44,6 +45,7 @@ namespace NUnit.Runner.ViewModel
         }
 
         private readonly ITest _test;
+        public string Name { get; }
         public string MethodName { get; }
         public string ClassName { get; }
         public string FullName { get; }

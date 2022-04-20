@@ -29,6 +29,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace NUnit.Runner.ViewModel
@@ -36,12 +37,26 @@ namespace NUnit.Runner.ViewModel
     class TestExplorerViewModel : BaseViewModel
     {
         readonly TestPackage _testPackage;
-        bool _loading;
+        readonly SummaryViewModel _summaryViewModel;
+        bool _busy;
 
-        public TestExplorerViewModel(TestPackage testPackage)
+        public TestExplorerViewModel(TestPackage testPackage, SummaryViewModel summaryViewModel)
         {
             _testPackage = testPackage;
+            _summaryViewModel = summaryViewModel;
             TestList = new ObservableCollection<GroupedTestsViewModel>();
+
+            RunTestCommand = new Command(
+                async o =>
+                {
+                    if(o is TestDescriptionViewModel testVm) 
+                    {
+                        Busy = true;
+                        var results = await _testPackage.ExecuteTests(new[] { testVm.FullName });
+                        await _summaryViewModel.DisplayResults(results);
+                        await Navigation.PopAsync();
+                    }                    
+                });
         }
 
         public async Task LoadTestsAsync()
@@ -49,7 +64,7 @@ namespace NUnit.Runner.ViewModel
             var groupedTests = (await _testPackage.EnumerateTestsAsync()).GroupBy(t => t.Test.ClassName);
             Device.BeginInvokeOnMainThread(() =>
             {
-                Loading = true;
+                Busy = true;
 
                 TestList.Clear();
 
@@ -58,22 +73,24 @@ namespace NUnit.Runner.ViewModel
                     TestList.Add(new GroupedTestsViewModel(testClass.Key, testClass.Select(t => new TestDescriptionViewModel(t.Test, t.Assembly))));
                 }
 
-                Loading = false;
+                Busy = false;
             });          
         } 
 
         public ObservableCollection<GroupedTestsViewModel> TestList { get; }
 
+        public ICommand RunTestCommand { set; get; }
+
         /// <summary>
-        /// True if tests are being loaded or grouped
+        /// True if tests are being loaded or executed
         /// </summary>
-        public bool Loading
+        public bool Busy
         {
-            get { return _loading; }
+            get { return _busy; }
             set
             {
-                if (value.Equals(_loading)) return;
-                _loading = value;
+                if (value.Equals(_busy)) return;
+                _busy = value;
                 OnPropertyChanged();
             }
         }
